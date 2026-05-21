@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Nest & Bloom — Family Home Organization System</title>
+    <!-- Google Fonts: Cormorant Garamond (serif) + Joto (clean sans) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Jost:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #F7F3EC;
+            font-family: 'Jost', sans-serif;
+            font-weight: 400;
+            color: #6B4F35;
+            line-height: 1.4;
+            scroll-behavior: smooth;
+        }
+
+        /* Typography variables & color */
+        :root {
+            --cream: #F7F3EC;
+            --dusty-rose: #C4957A;
+            --sage: #7E9B7B;
+            --sage-light: #D4E4D2;
+            --deep-brown: #3D2E1E;
+            --medium-brown: #6B4F35;
+            --warm-gold: #C8A96A;
+            --white-cream: #FDFAF5;
+        }
+
+        h1, h2, h3, .serif, .logo, .headline-font {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+        }
+
+        h2 {
+            font-size: 2.8rem;
+            line-height: 1.2;
+            color: var(--deep-brown);
+        }
+
+        .section-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--deep-brown);
+            color: white;
+            padding: 0.85rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-family: 'Jost', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+        }
+
+        .btn-outline {
+            display: inline-block;
+            background: transparent;
+            border: 1.5px solid var(--deep-brown);
+            color: var(--deep-brown);
+            padding: 0.85rem 1.8rem;
+            border-radius: 40px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-gold {
+            background-color: var(--warm-gold);
+            color: var(--deep-brown);
+            font-weight: 600;
+        }
+
+        .btn-rose {
+            background-color: var(--dusty-rose);
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-outline:hover, .btn-gold:hover, .btn-rose:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* sticky navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(247, 243, 236, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid rgba(196,149,122,0.2);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--deep-brown);
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: var(--dusty-rose);
+            font-style: italic;
+        }
+        .nav-cta {
+            background-color: var(--dusty-rose);
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            background-color: #b27f64;
+        }
+
+        /* hero two columns */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+        .hero-text {
+            flex: 1;
+        }
+        .hero-visual {
+            flex: 1;
+            position: relative;
+            min-height: 420px;
+        }
+        .eyebrow {
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--dusty-rose);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+        .eyebrow::before, .eyebrow::after {
+            content: "";
+            width: 30px;
+            height: 1px;
+            background: var(--dusty-rose);
+            display: inline-block;
+            opacity: 0.6;
+        }
+        .hero h1 {
+            font-size: 3.8rem;
+            margin: 1rem 0 1rem;
+            line-height: 1.2;
+            color: var(--deep-brown);
+        }
+        .hero h1 i, .italic-rose {
+            color: var(--dusty-rose);
+            font-style: italic;
+            font-weight: 500;
+        }
+        .trust-badges {
+            display: flex;
+            gap: 1.8rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .trust-badges span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+        }
+        .trust-badges span::before {
+            content: "•";
+            color: var(--sage);
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+        /* card stack */
+        .card-stack {
+            position: relative;
+            height: 380px;
+            width: 100%;
+        }
+        .stack-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            position: absolute;
+            width: 85%;
+            left: 8%;
+            transition: all 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        .stack-card:nth-child(1) { transform: rotate(-6deg) translateY(20px); z-index: 1; background: #fffdf9; top: 10px; }
+        .stack-card:nth-child(2) { transform: rotate(3deg) translateY(10px); z-index: 2; background: #ffffff; top: 20px; left: 12%; }
+        .stack-card:nth-child(3) { transform: rotate(0deg); z-index: 3; background: white; top: 30px; box-shadow: 0 25px 40px -12px rgba(0,0,0,0.2);}
+        .price-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--dusty-rose);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10;
+            font-family: 'Jost', sans-serif;
+        }
+        .price-badge .big-price { font-size: 1.4rem; font-weight: 700; line-height: 1; }
+        .faint-leaf {
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.08;
+            pointer-events: none;
+            bottom: -20px;
+            right: -10px;
+            z-index: 0;
+        }
+        /* Problem section dark */
+        .dark-section {
+            background-color: var(--deep-brown);
+            color: #F7F3EC;
+        }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2.5rem;
+        }
+        .problem-card {
+            position: relative;
+        }
+        .faint-number {
+            font-size: 4rem;
+            font-weight: 700;
+            font-family: 'Cormorant Garamond', serif;
+            opacity: 0.2;
+            line-height: 1;
+            color: #f7f3ec;
+        }
+        /* Template cards grid */
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0 2rem;
+        }
+        .template-card {
+            background: white;
+            border-left: 6px solid var(--dusty-rose);
+            padding: 1.5rem;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+        .full-width-card {
+            grid-column: 1 / -1;
+        }
+        .bonus-strip {
+            background-color: var(--warm-gold);
+            border-radius: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .bonus-item {
+            flex: 1;
+            background: rgba(255,255,240,0.9);
+            padding: 1.5rem;
+            border-radius: 20px;
+        }
+        .bonus-badge {
+            background: #fff1cf;
+            display: inline-block;
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #6b4f35;
+        }
+        /* timeline */
+        .timeline {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin: 3rem 0;
+            position: relative;
+        }
+        .timeline-step {
+            flex: 1;
+            text-align: center;
+            min-width: 180px;
+        }
+        .circle-step {
+            width: 60px;
+            height: 60px;
+            background: var(--dusty-rose);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        /* testimonials */
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .test-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 24px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+        }
+        .stars {
+            color: var(--warm-gold);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+        }
+        .quote-mark {
+            font-size: 5rem;
+            font-family: serif;
+            color: var(--dusty-rose);
+            opacity: 0.2;
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+        }
+        /* value + pricing */
+        .value-pricing {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+        }
+        .value-list {
+            flex: 1.2;
+        }
+        .price-cta-box {
+            flex: 0.9;
+            background: var(--deep-brown);
+            padding: 2rem;
+            border-radius: 28px;
+            color: #F7F3EC;
+        }
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px dotted #cbbfa9;
+            padding: 0.8rem 0;
+        }
+        .total-row {
+            border-top: 2px solid var(--warm-gold);
+            margin-top: 0.8rem;
+            padding-top: 1rem;
+            font-weight: bold;
+        }
+        /* email capture */
+        .email-capture {
+            background-color: var(--sage-light);
+            border-radius: 32px;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .inline-form {
+            display: flex;
+            max-width: 480px;
+            margin: 1.5rem auto 0;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .inline-form input {
+            flex: 2;
+            padding: 0.9rem 1rem;
+            border-radius: 60px;
+            border: none;
+            font-family: 'Jost', sans-serif;
+        }
+        /* footer */
+        .footer {
+            background: var(--deep-brown);
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            color: #d9cfc2;
+        }
+        /* animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.6s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hero-text .fade-up {
+            transition-delay: 0.05s;
+        }
+        /* responsive */
+        @media (max-width: 900px) {
+            .hero-visual { display: none; }
+            .hero-text { flex: auto; text-align: center; }
+            .trust-badges { justify-content: center; }
+            .hero .btn-group { justify-content: center; }
+            h2 { font-size: 2.2rem; }
+            .section-container { padding: 3rem 1.5rem; }
+            .timeline { flex-direction: column; align-items: center; }
+            .value-pricing { flex-direction: column; }
+            .footer { flex-direction: column; text-align: center; gap: 1.2rem; }
+            .navbar { padding: 1rem; }
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin: 1.5rem 0;
+        }
+        .scroll-link { cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<!-- STICKY NAVIGATION -->
+<div class="navbar">
+    <div class="logo">Nest <span>&</span> Bloom</div>
+    <a href="https://nestandbloom.gumroad.com/l/houseplanner" class="nav-cta" target="_blank">Get the Bundle — $12</a>
+</div>
+
+<!-- SECTION 1: HERO -->
+<section style="background: #F7F3EC; position: relative; overflow: hidden;">
+    <div style="position: absolute; top: -100px; right: -50px; width: 400px; height: 400px; background: radial-gradient(circle, rgba(196,149,122,0.08) 0%, rgba(247,243,236,0) 70%); pointer-events: none;"></div>
+    <div class="section-container">
+        <div class="hero">
+            <div class="hero-text">
+                <div class="eyebrow fade-up visible" style="transition-delay: 0s;">Home Organization System</div>
+                <h1 class="fade-up" style="transition-delay: 0.1s;">The organized home<br>your family <i>deserves</i><br>starts here.</h1>
+                <p class="fade-up" style="transition-delay: 0.2s; font-size: 1.1rem; margin-bottom: 1.2rem;">9 professional templates that guide your whole family — from chaos to calm in 6 weeks. Not just a plan. A complete system that actually sticks.</p>
+                <div class="btn-group fade-up" style="transition-delay: 0.3s;">
+                    <a href="https://nestandbloom.gumroad.com/l/houseplanner" target="_blank" class="btn-primary">Get All 9 Templates — $12</a>
+                    <a href="#included" class="btn-outline scroll-link">See What's Inside</a>
+                </div>
+                <div class="trust-badges fade-up" style="transition-delay: 0.4s;">
+                    <span>200+ families organized</span>
+                    <span>9 professional templates</span>
+                    <span>Instant download</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="card-stack">
+                    <div class="stack-card">
+                        <div style="font-weight: 600; font-family: serif;">Master Organization Plan</div>
+                        <div style="font-size: 0.7rem; color: #C4957A;">Nest & Bloom</div>
+                        <hr style="margin: 8px 0; opacity:0.3">
+                        <div style="height: 60px; background: #f1ede7; border-radius: 8px;"></div>
+                        <div style="margin-top: 8px; height: 8px; width: 70%; background: #C4957A40;"></div>
+                    </div>
+                    <div class="stack-card"></div>
+                    <div class="stack-card">
+                        <div style="font-weight: 600; font-family: serif;">Room Planning Worksheets</div>
+                        <div style="font-size:0.7rem">Kitchen, bedroom, living...</div>
+                    </div>
+                </div>
+                <div class="price-badge"><span class="big-price">$12</span><br><span style="font-size:0.7rem;">9 templates</span></div>
+                <div class="faint-leaf">🌿</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 2: PROBLEM (Dark) -->
+<section class="dark-section">
+    <div class="section-container">
+        <div class="eyebrow" style="color: var(--dusty-rose);">Sound familiar?</div>
+        <h2 style="color: #F7F3EC;">You've organized before.<br> It <i style="color: var(--dusty-rose);">never sticks.</i></h2>
+        <p style="color: rgba(247,243,236,0.7); max-width: 600px; margin: 1rem 0 2rem;">The problem isn't you. It's the missing system. Most people organize randomly, buy containers before planning, and do it alone. Here's what's actually going wrong.</p>
+        <div class="grid-3">
+            <div class="problem-card fade-up"><div class="faint-number">01</div><h3 style="color: white;">No plan before starting</h3><p style="color: #ddd;">Jumping straight to organizing without a strategy means you're moving clutter, not solving it. Every professional organizer plans first.</p></div>
+            <div class="problem-card fade-up"><div class="faint-number">02</div><h3 style="color: white;">Family isn't involved</h3><p style="color: #ddd;">You can't maintain a system alone. When family members don't know their role, the system collapses in weeks regardless of how well you set it up.</p></div>
+            <div class="problem-card fade-up"><div class="faint-number">03</div><h3 style="color: white;">No maintenance habit</h3><p style="color: #ddd;">Organization without maintenance is just delayed mess. Five minutes daily is all it takes — but only if it's built into the system from day one.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3: WHAT'S INCLUDED (ID included) -->
+<section id="included" style="background: #FDFAF5;">
+    <div class="section-container">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 1.2rem; margin-bottom: 2rem;">
+            <div><div class="eyebrow">What's inside</div><h2>9 templates. Every step <i style="color: var(--dusty-rose);">covered.</i></h2></div>
+            <div style="max-width: 360px;"><p>7 core professional templates plus 2 free bonus guides. Everything your family needs from first assessment to long-term maintenance — in one $12 download.</p></div>
+        </div>
+
+        <div class="template-grid">
+            <div class="template-card fade-up"><div style="color: var(--dusty-rose); font-size:0.8rem;">Template 01</div><h3>Master Organization Plan</h3><p>Family-wide strategy, room overview, member assignments, and goal tracking. Your entire home on one page.</p></div>
+            <div class="template-card fade-up"><div style="color: var(--dusty-rose);">Template 02</div><h3>Room Planning Worksheets</h3><p>Detailed plans for 5 rooms. Inventory, strategy, storage layout, and a 4-phase implementation timeline.</p></div>
+            <div class="template-card fade-up"><div style="color: var(--dusty-rose);">Template 03</div><h3>Family Chore Chart</h3><p>Weekly tasks assigned by family member. Progress tracking, completion logs, and built-in accountability.</p></div>
+            <div class="template-card fade-up"><div style="color: var(--dusty-rose);">Template 04</div><h3>Inventory Tracker</h3><p>Item-by-item tracking with location, condition, value, and warranty info. Know exactly what you have.</p></div>
+            <div class="template-card fade-up"><div style="color: var(--dusty-rose);">Template 05</div><h3>Storage Solutions Guide</h3><p>Budget planner, shopping list, labeling system, and zone layout. Stop overbuying the wrong containers.</p></div>
+            <div class="template-card fade-up"><div style="color: var(--dusty-rose);">Template 06</div><h3>Maintenance Schedule</h3><p>Daily 5-min, weekly 20-min, monthly 1-hour system. 12-month accountability tracker included.</p></div>
+            <div class="template-card full-width-card fade-up"><div style="color: var(--dusty-rose);">Template 07</div><h3>Implementation Guide — 10-Step Professional Roadmap</h3><p>The exact process professional organizers follow with clients. Common mistakes to avoid, family meeting guide, and budget planning all in one place.</p></div>
+        </div>
+
+        <div class="bonus-strip">
+            <div class="bonus-item"><span style="font-size:2rem;">★</span> <div class="bonus-badge" style="margin-top: 8px;">FREE BONUS — $25 value</div><h3 style="margin: 10px 0;">Room-by-Room Quick Reference Guide</h3><p>One printable page per room (6 rooms). Print it, put it on your fridge, follow it. Laminate-friendly and reusable.</p></div>
+            <div class="bonus-item"><span style="font-size:2rem;">★</span> <div class="bonus-badge">FREE BONUS — $15 value</div><h3 style="margin: 10px 0;">Smart Storage Shopping List Template</h3><p>Measure first, compare prices, buy only what fits. Saves families $200–$400 on wrong containers.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4: HOW IT WORKS -->
+<section style="background: #F7F3EC;">
+    <div class="section-container">
+        <div class="eyebrow">The process</div>
+        <h2>Six weeks to a home that stays <i style="color: var(--dusty-rose);">organized.</i></h2>
+        <div class="timeline">
+            <div class="timeline-step fade-up"><div class="circle-step">1</div><h3>Week 1: Plan</h3><p>Use the Master Plan to set your family strategy, define goals, and assign roles to every member.</p></div>
+            <div class="timeline-step fade-up"><div class="circle-step">2</div><h3>Weeks 2–3: Declutter</h3><p>Use Room Worksheets room by room. Remove, donate, discard. Only keep what earns its space.</p></div>
+            <div class="timeline-step fade-up"><div class="circle-step">3</div><h3>Weeks 4–5: Organize</h3><p>Create zones, label everything, arrange by priority. Use the Shopping List to buy exactly what you need.</p></div>
+            <div class="timeline-step fade-up"><div class="circle-step">4</div><h3>Week 6+: Maintain</h3><p>5 minutes daily. 20 minutes weekly. The Maintenance Schedule keeps it perfect indefinitely.</p></div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 5: TESTIMONIALS -->
+<section style="background: #F3EDE5;">
+    <div class="section-container">
+        <div class="eyebrow">Real families</div>
+        <h2>Results that <i style="color:var(--dusty-rose);">last.</i></h2>
+        <div class="testimonial-grid">
+            <div class="test-card fade-up"><div class="stars">★★★★★</div><p style="font-style: italic; margin-bottom: 1rem;">“I bought these templates to organize my kitchen and ended up using the whole system for my entire home. My family knows exactly where everything goes and we've stayed organized for 3 months straight.”</p><p><strong>Sarah M.</strong><br>Mom of 3</p><div class="quote-mark">“</div></div>
+            <div class="test-card fade-up"><div class="stars">★★★★★</div><p style="font-style: italic;">“I was about to spend $400 on storage containers. The shopping list template showed me I only needed $120. Same results — 70% savings. Professional approach made simple.”</p><p><strong>Robert M.</strong><br>Busy Professional</p><div class="quote-mark">“</div></div>
+            <div class="test-card fade-up"><div class="stars">★★★★★</div><p style="font-style: italic;">“My kids actually maintain their own space now. The chore chart changed our whole household. Everyone knows their role and we've kept it going for months.”</p><p><strong>Michael K.</strong><br>Dad of 2</p><div class="quote-mark">“</div></div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 6: VALUE + PRICING + CTA (id pricing) -->
+<section id="pricing" style="background: #FDFAF5;">
+    <div class="section-container">
+        <div class="value-pricing">
+            <div class="value-list">
+                <div class="eyebrow">Everything included</div>
+                <h2>What it's <i style="color: var(--dusty-rose);">worth.</i> What you pay.</h2>
+                <div class="price-row"><span>7 Core Professional Templates</span><span>$35</span></div>
+                <div class="price-row"><span>Room-by-Room Quick Reference Guide</span><span>$25</span></div>
+                <div class="price-row"><span>Smart Storage Shopping List Template</span><span>$15</span></div>
+                <div class="price-row"><span>Instant download + lifetime access</span><span>—</span></div>
+                <div class="price-row total-row"><span style="font-weight: bold;">Your price today</span><span><span style="text-decoration: line-through; margin-right: 10px;">$75</span> <strong style="color: var(--dusty-rose); font-size:1.5rem;">$12</strong></span></div>
+            </div>
+            <div class="price-cta-box">
+                <h3 style="color: #F7F3EC;">Start your organized home <i style="color: var(--dusty-rose);">today.</i></h3>
+                <p style="opacity:0.7; margin: 1rem 0;">Download all 9 templates instantly. Printable, fillable, and ready to use this weekend. Organized families in 6 weeks or your money back.</p>
+                <a href="https://nestandbloom.gumroad.com/l/houseplanner" target="_blank" class="btn-gold" style="display: block; text-align: center; padding: 1rem; border-radius: 80px; font-weight: bold; text-decoration: none; margin: 1rem 0 0.5rem;">Get All 9 Templates — $12</a>
+                <p style="font-size:0.7rem; opacity:0.6; text-align: center;">Instant download · Printable PDFs · Fillable digitally · Lifetime access<br>Money-back guarantee · Used by 200+ families</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 7: EMAIL CAPTURE (free guide) -->
+<section id="freeguide" style="background: #F7F3EC;">
+    <div class="section-container">
+        <div class="email-capture">
+            <div class="eyebrow" style="color: var(--sage);">Free guide</div>
+            <h2>Not ready to buy yet? Get the <i style="color: var(--dusty-rose);">free room guide.</i></h2>
+            <p>Enter your email and we'll send you our free Kitchen Organization Quick Guide instantly. No spam, just one practical guide you can use today.</p>
+            <form id="emailForm" class="inline-form" action="javascript:void(0);">
+                <input type="email" placeholder="your@email.com" id="emailInput" required style="border-radius: 60px;">
+                <button type="submit" class="btn-rose" style="border: none; cursor: pointer; padding: 0.9rem 1.8rem; border-radius: 60px;">Send My Free Guide</button>
+            </form>
+            <p style="font-size:0.7rem; margin-top: 1rem;">We respect your inbox. Unsubscribe anytime.</p>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 8: FOOTER -->
+<footer class="footer">
+    <div class="logo" style="color: #F7F3EC; margin:0;">Nest <span style="color: var(--dusty-rose);">&</span> Bloom</div>
+    <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+        <a href="#included" style="color: #e5d9ce; text-decoration: none;">Templates</a>
+        <a href="#pricing" style="color: #e5d9ce; text-decoration: none;">Pricing</a>
+        <a href="#freeguide" style="color: #e5d9ce; text-decoration: none;">Free Guide</a>
+        <a href="https://nestandbloom.gumroad.com/l/houseplanner" target="_blank" style="color: #e5d9ce; text-decoration: none;">Buy Now</a>
+    </div>
+    <div>© 2025 Nest & Bloom. All rights reserved.</div>
+</footer>
+
+<script>
+    // Intersection Observer for fade-up animations
+    const fadeElements = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: "0px 0px -40px 0px" });
+    fadeElements.forEach(el => observer.observe(el));
+    // manually also mark hero visible already
+    document.querySelectorAll('.hero-text .fade-up, .hero .fade-up').forEach(el => el.classList.add('visible'));
+
+    // Smooth scroll for "See What's Inside"
+    document.querySelectorAll('.scroll-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if(targetId && targetId !== '#') {
+                const target = document.querySelector(targetId);
+                if(target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // Email capture demo alert
+    const emailForm = document.getElementById('emailForm');
+    if(emailForm) {
+        emailForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value.trim();
+            if(email) {
+                alert(`Thanks! We’d send the free Kitchen Guide to ${email} (demo). Get the complete system anytime.`);
+                document.getElementById('emailInput').value = '';
+            } else {
+                alert('Please enter an email address to receive the free guide.');
+            }
+        });
+    }
+
+    // Add additional hover lifts and small interactions
+    const btns = document.querySelectorAll('.btn-primary, .btn-outline, .btn-gold, .btn-rose, .nav-cta');
+    btns.forEach(btn => {
+        btn.addEventListener('mouseenter', () => btn.style.transform = 'translateY(-2px)');
+        btn.addEventListener('mouseleave', () => btn.style.transform = 'translateY(0)');
+    });
+</script>
+</body>
+</html>
